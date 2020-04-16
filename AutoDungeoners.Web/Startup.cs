@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Mongo.Migration.Startup;
+using Mongo.Migration.Startup.DotNetCore;
+using MongoDB.Driver;
 
 namespace AutoDungeoners.Web
 {
@@ -27,6 +30,16 @@ namespace AutoDungeoners.Web
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
+            });
+
+            // Set up MongoDB migrations
+            var client = new MongoClient(Configuration.GetSection("MongoDb:ConnectionString").Value);
+            services.AddSingleton<IMongoClient>(client);
+
+            services.AddMigration(new MongoMigrationSettings()
+            {
+                ConnectionString = Configuration.GetSection("MongoDb:ConnectionString").Value,
+                Database = Configuration.GetSection("MongoDb:Database").Value, 
             });
         }
 
