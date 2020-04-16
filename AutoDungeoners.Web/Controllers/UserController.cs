@@ -9,7 +9,7 @@ using MongoDB.Driver;
 namespace AutoDungeoners.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;

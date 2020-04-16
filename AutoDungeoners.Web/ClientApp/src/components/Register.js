@@ -26,6 +26,20 @@ export class Register extends Component {
   onSubmit(event) {
     console.log(JSON.stringify(this.state));
     event.preventDefault();
+
+    return fetch('api/user',
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(this.state)
+    })
+    .then((response) => {
+      console.log("Response was " + JSON.stringify(response));
+    })
+    .catch((error) => console.error(error));
   }
 
   render() {
