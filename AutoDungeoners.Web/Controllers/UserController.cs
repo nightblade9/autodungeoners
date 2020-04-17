@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using AutoDungeoners.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -27,16 +28,25 @@ namespace AutoDungeoners.Web.Controllers
         /// <summary>
         /// Registers a new user. Returns the user's ID if successful.
         /// </summary>
-        public ObjectId Register(string emailAddress, string plainTextPassword)
+        public ObjectId Register(RegistrationRequest request)
         {
-            // TODO: validate email address + check for duplication
+            // TODO: validate email address
             // TODO: validate password is sufficiently long
-            // TODO: transactionally undo if one op fails
+
+            var emailAddress = request.EmailAddress;
+            var plainTextPassword = request.Password;
 
             var newUser = new User() { EmailAddress = emailAddress };
             var database = _configuration.GetSection("MongoDb:Database").Value;
             var mongoSettings = new MongoCollectionSettings() { AssignIdOnInsert = true };
             var users = _client.GetDatabase(database).GetCollection<User>("User", mongoSettings);
+
+            var existingUser = users.Find(u => u.EmailAddress == emailAddress).SingleOrDefault();
+            if (existingUser != null)
+            {
+                throw new ArgumentException(nameof(emailAddress));
+            }
+
             users.InsertOne(newUser);
             newUser = users.Find(u => u.EmailAddress == emailAddress).Single();
 
@@ -45,6 +55,12 @@ namespace AutoDungeoners.Web.Controllers
             auths.InsertOne(auth);
 
             return newUser.Id;
+        }
+
+        public class RegistrationRequest
+        {
+            public string EmailAddress { get; set; }
+            public string Password { get; set; }
         }
     }
 }
