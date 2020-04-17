@@ -37,9 +37,19 @@ export class Register extends Component {
       body: JSON.stringify(this.state)
     })
     .then((response) => {
-      console.log("Response was " + JSON.stringify(response));
+      if (response.ok)
+      {
+        return response.json();
+      }
+      else
+      {
+        throw new Error("Registration failed!");
+      }
     })
-    .catch((error) => console.error(error));
+    .then(data => {
+      console.log("Registration succeeded");
+    })
+    .catch(e => console.error("Registration failed"));
   }
 
   render() {
