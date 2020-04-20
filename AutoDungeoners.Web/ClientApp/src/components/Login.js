@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
-export class Register extends Component {
-  static displayName = Register.name;
+export class Login extends Component {
+  static displayName = Login.name;
 
   constructor(props) {
     super(props);
@@ -29,7 +30,7 @@ export class Register extends Component {
 
     return fetch('api/user',
     {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -43,19 +44,20 @@ export class Register extends Component {
       }
       else
       {
-        throw new Error("Registration failed!");
+        throw new Error("Login failed!");
       }
     })
     .then(data => {
-      console.log("Registration succeeded");
+      console.log("Login succeeded");
     })
-    .catch(e => console.error("Registration failed"));
+    .catch(e => console.error("Login failed"));
   }
 
   render() {
     return (
       <form onSubmit={this.onSubmit}>
-        <h2>Register</h2>
+        <h2>Login</h2>
+        <p>Don't have an account yet? <Link to={`/register`}>Register here</Link>.</p>
         <label>Email Address:
           <input type="text" value={this.state.emailAddress} onChange={this.onEmailAddressChange} />
         </label>
