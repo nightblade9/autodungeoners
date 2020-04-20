@@ -13,23 +13,23 @@ namespace AutoDungeoners.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class RegisterController : ControllerBase
     {
-        private readonly ILogger<UserController> _logger;
+        private readonly ILogger<RegisterController> _logger;
         private readonly IConfiguration _configuration;
         private IMongoClient _client;
 
-        public UserController(ILogger<UserController> logger, IConfiguration configuration, IMongoClient client)
+        public RegisterController(ILogger<RegisterController> logger, IConfiguration configuration, IMongoClient client)
         {
             _logger = logger;
             _configuration = configuration;
             _client = client;
         }
-
-        [HttpPost]
+        
         /// <summary>
         /// Registers a new user. Returns the user's ID if successful.
         /// </summary>
+        [HttpPost]
         public ActionResult<User> Register(RegistrationRequest request)
         {
             // TODO: validate email address

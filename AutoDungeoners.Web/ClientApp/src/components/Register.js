@@ -27,7 +27,7 @@ export class Register extends Component {
     console.log(JSON.stringify(this.state));
     event.preventDefault();
 
-    return fetch('api/user',
+    return fetch('api/register',
     {
       method: 'POST',
       headers: {
@@ -49,7 +49,7 @@ export class Register extends Component {
     .then(data => {
       console.log("Registration succeeded");
     })
-    .catch(e => console.error("Registration failed"));
+    .catch(e => console.error("Registration failed: " + e));
   }
 
   render() {

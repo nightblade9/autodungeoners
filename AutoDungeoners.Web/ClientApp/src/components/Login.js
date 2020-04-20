@@ -28,9 +28,9 @@ export class Login extends Component {
     console.log(JSON.stringify(this.state));
     event.preventDefault();
 
-    return fetch('api/user',
+    return fetch('api/login',
     {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export class Login extends Component {
     .then(data => {
       console.log("Login succeeded");
     })
-    .catch(e => console.error("Login failed"));
+    .catch(e => console.error("Login failed: " + e));
   }
 
   render() {
