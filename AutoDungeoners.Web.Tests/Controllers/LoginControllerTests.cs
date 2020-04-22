@@ -1,11 +1,9 @@
 using System;
-using System.Linq;
 using AutoDungeoners.Web.Controllers;
 using AutoDungeoners.Web.DataAccess.Repositories;
 using AutoDungeoners.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 using Moq;
 using NUnit.Framework;
 using static AutoDungeoners.Web.Controllers.LoginController;
