@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDungeoners.Web", "AutoDungeoners.Web\AutoDungeoners.Web.csproj", "{E61C02B0-461A-419D-9C28-1E1A45105BE0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDungeoners.Web.Tests", "AutoDungeoners.Web.Tests\AutoDungeoners.Web.Tests.csproj", "{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,17 @@ Global
 		{E61C02B0-461A-419D-9C28-1E1A45105BE0}.Release|x64.Build.0 = Release|Any CPU
 		{E61C02B0-461A-419D-9C28-1E1A45105BE0}.Release|x86.ActiveCfg = Release|Any CPU
 		{E61C02B0-461A-419D-9C28-1E1A45105BE0}.Release|x86.Build.0 = Release|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Debug|x64.Build.0 = Debug|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Debug|x86.Build.0 = Debug|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Release|x64.ActiveCfg = Release|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Release|x64.Build.0 = Release|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Release|x86.ActiveCfg = Release|Any CPU
+		{EE31E5A9-F19E-4E18-8FAE-3311D2FFB9BD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
