@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using AutoDungeoners.Web.DataAccess.Repositories;
 using AutoDungeoners.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,15 +16,15 @@ namespace AutoDungeoners.Web.Controllers
     [Route("api/[controller]")]
     public class LoginController : ControllerBase
     {
-        private readonly ILogger<LoginController> _logger;
-        private readonly IConfiguration _configuration;
-        private IMongoClient _client;
+        private readonly ILogger<LoginController> logger;
+        private readonly IConfiguration configuration;
+        private readonly IMongoClient client;
 
         public LoginController(ILogger<LoginController> logger, IConfiguration configuration, IMongoClient client)
         {
-            _logger = logger;
-            _configuration = configuration;
-            _client = client;
+            this.logger = logger;
+            this.configuration = configuration;
+            this.client = client;
         }
 
         /// <summary>Log in.</summary>
@@ -33,18 +34,15 @@ namespace AutoDungeoners.Web.Controllers
             var emailAddress = request.EmailAddress;
             var plainTextPassword = request.Password;
 
-            var database = _configuration.GetSection("MongoDb:Database").Value;
-            var mongoSettings = new MongoCollectionSettings() { AssignIdOnInsert = true };
-            var users = _client.GetDatabase(database).GetCollection<User>("User", mongoSettings);
-
-            var user = users.Find(u => u.EmailAddress == emailAddress).SingleOrDefault();
+            var usersRepo = new MongoRepository<User>(this.configuration, this.client);
+            var user = usersRepo.SingleOrDefault(u => u.EmailAddress == emailAddress);
             if (user == null)
             {
                 return BadRequest(new ArgumentException(nameof(emailAddress)));
             }
 
-            var auths = _client.GetDatabase(database).GetCollection<Auth>("Auth", mongoSettings);
-            var userCredentials = auths.Find(a => a.UserId == user.Id).SingleOrDefault();
+            var authsRepo = new MongoRepository<Auth>(this.configuration, this.client);
+            var userCredentials = authsRepo.SingleOrDefault(a => a.UserId == user.Id);
             
             var hashedPassword = plainTextPassword;
             if (userCredentials == null || userCredentials.HashedPassword != hashedPassword)
