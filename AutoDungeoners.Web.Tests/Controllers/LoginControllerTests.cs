@@ -1,5 +1,9 @@
 using System.Linq;
+using AutoDungeoners.Web.Controllers;
+using AutoDungeoners.Web.DataAccess.Repositories;
 using AutoDungeoners.Web.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Moq;
 using NUnit.Framework;
@@ -19,21 +23,21 @@ namespace AutoDungeoners.Web.Tests
 
             var request = new LoginRequest() { EmailAddress = expectedEmail, Password = expectedPassword };
 
-            var existingUser = new User() { EmailAddress = expectedEmail };
-            var usersCollection = new Mock<IMongoCollection<User>>();
-            usersCollection.Setup(e => e.Find(It.IsAny<FilterDefinition<User>>(), null));
+            var existingUser = new User() { EmailAddress = expectedEmail, Id = new MongoDB.Bson.ObjectId() };
+            var userRepo = new Mock<IUserRepository>();
+            userRepo.Setup(u => u.FindOneByEmail(expectedEmail)).Returns(existingUser);
 
-            var usersDb = new Mock<IMongoDatabase>();
-            usersDb.Setup(u => u.GetCollection<User>("User", It.IsAny<MongoCollectionSettings>())).Returns(usersCollection.Object);
+            var authRepo = new Mock<IAuthRepository>();
+            var credentials = new Auth() { UserId = existingUser.Id, HashedPassword = expectedPassword };
+            authRepo.Setup(a => a.FindOneById(existingUser.Id)).Returns(credentials);
             
-            var mongoClient = new Mock<IMongoClient>();
-            mongoClient.Setup(c => c.GetDatabase(It.IsAny<string>(), null)).Returns(usersDb.Object);
+            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, userRepo.Object, authRepo.Object);
 
             // Act
-            var actual = mongoClient.Object.GetDatabase("hi there").GetCollection<User>("User").Find(u => true).SingleOrDefault();
+            var response = controller.Login(request).Result;
 
             // Assert
-            Assert.That(actual, Is.Not.Null);
+            Assert.That(response, Is.TypeOf(typeof(OkObjectResult)));
         }
 
         [Test]
