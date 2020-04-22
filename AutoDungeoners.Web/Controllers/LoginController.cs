@@ -17,14 +17,14 @@ namespace AutoDungeoners.Web.Controllers
     public class LoginController : ControllerBase
     {
         private readonly ILogger<LoginController> logger;
-        private readonly IConfiguration configuration;
-        private readonly IMongoClient client;
+        private readonly IUserRepository userRepository;
+        private readonly IAuthRepository authRepository;
 
-        public LoginController(ILogger<LoginController> logger, IConfiguration configuration, IMongoClient client)
+        public LoginController(ILogger<LoginController> logger, IUserRepository userRepository, IAuthRepository authRepository)
         {
             this.logger = logger;
-            this.configuration = configuration;
-            this.client = client;
+            this.userRepository = userRepository;
+            this.authRepository = authRepository;
         }
 
         /// <summary>Log in.</summary>
@@ -34,16 +34,13 @@ namespace AutoDungeoners.Web.Controllers
             var emailAddress = request.EmailAddress;
             var plainTextPassword = request.Password;
 
-            var usersRepo = new MongoRepository<User>(this.configuration, this.client);
-            var user = usersRepo.SingleOrDefault(u => u.EmailAddress == emailAddress);
+            var user = this.userRepository.FindOneByEmail(emailAddress);
             if (user == null)
             {
                 return BadRequest(new ArgumentException(nameof(emailAddress)));
             }
 
-            var authsRepo = new MongoRepository<Auth>(this.configuration, this.client);
-            var userCredentials = authsRepo.SingleOrDefault(a => a.UserId == user.Id);
-            
+            var userCredentials = this.authRepository.FindOneById(user.Id);
             var hashedPassword = plainTextPassword;
             if (userCredentials == null || userCredentials.HashedPassword != hashedPassword)
             {

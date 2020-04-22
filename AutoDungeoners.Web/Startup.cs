@@ -1,3 +1,4 @@
+using AutoDungeoners.Web.DataAccess.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,6 +42,10 @@ namespace AutoDungeoners.Web
                 ConnectionString = Configuration.GetSection("MongoDb:ConnectionString").Value,
                 Database = Configuration.GetSection("MongoDb:Database").Value, 
             });
+
+            // DI
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
