@@ -1,12 +1,9 @@
 using System;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
+using AutoDungeoners.Web.DataAccess.Repositories;
 using AutoDungeoners.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace AutoDungeoners.Web.Controllers
@@ -15,15 +12,13 @@ namespace AutoDungeoners.Web.Controllers
     [Route("api/[controller]")]
     public class RegisterController : ControllerBase
     {
-        private readonly ILogger<RegisterController> _logger;
-        private readonly IConfiguration _configuration;
-        private IMongoClient _client;
+        private readonly ILogger<RegisterController> logger;
+        private IMongoRepository repository;
 
-        public RegisterController(ILogger<RegisterController> logger, IConfiguration configuration, IMongoClient client)
+        public RegisterController(ILogger<RegisterController> logger, IMongoRepository repository)
         {
-            _logger = logger;
-            _configuration = configuration;
-            _client = client;
+            this.logger = logger;
+            this.repository = repository;
         }
         
         /// <summary>
@@ -39,9 +34,7 @@ namespace AutoDungeoners.Web.Controllers
             var plainTextPassword = request.Password;
 
             var newUser = new User() { EmailAddress = emailAddress };
-            var database = _configuration.GetSection("MongoDb:Database").Value;
-            var mongoSettings = new MongoCollectionSettings() { AssignIdOnInsert = true };
-            var users = _client.GetDatabase(database).GetCollection<User>("User", mongoSettings);
+            var users = repository.GetCollection<User>();
 
             var existingUser = users.Find(u => u.EmailAddress == emailAddress).SingleOrDefault();
             if (existingUser != null)
@@ -53,7 +46,7 @@ namespace AutoDungeoners.Web.Controllers
             newUser = users.Find(u => u.EmailAddress == emailAddress).Single();
 
             var auth = new Auth() { UserId = newUser.Id, HashedPassword = plainTextPassword, Salt = "TODO" };
-            var auths = _client.GetDatabase(database).GetCollection<Auth>("Auth", mongoSettings);
+            var auths = repository.GetCollection<Auth>();
             auths.InsertOne(auth);
 
             return Ok(newUser);

@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using AutoDungeoners.Web.DataAccess;
+using AutoDungeoners.Web.DataAccess.Repositories;
 using AutoDungeoners.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,15 +17,13 @@ namespace AutoDungeoners.Web.Controllers
     [Route("api/[controller]")]
     public class LoginController : ControllerBase
     {
-        private readonly ILogger<LoginController> _logger;
-        private readonly IConfiguration _configuration;
-        private IMongoClient _client;
+        private readonly ILogger<LoginController> logger;
+        private IMongoRepository repository;
 
-        public LoginController(ILogger<LoginController> logger, IConfiguration configuration, IMongoClient client)
+        public LoginController(ILogger<LoginController> logger, IMongoRepository repository)
         {
-            _logger = logger;
-            _configuration = configuration;
-            _client = client;
+            this.logger = logger;
+            this.repository = repository;
         }
 
         /// <summary>Log in.</summary>
@@ -33,17 +33,14 @@ namespace AutoDungeoners.Web.Controllers
             var emailAddress = request.EmailAddress;
             var plainTextPassword = request.Password;
 
-            var database = _configuration.GetSection("MongoDb:Database").Value;
-            var mongoSettings = new MongoCollectionSettings() { AssignIdOnInsert = true };
-            var users = _client.GetDatabase(database).GetCollection<User>("User", mongoSettings);
-
+            var users = repository.GetCollection<User>();
             var user = users.Find(u => u.EmailAddress == emailAddress).SingleOrDefault();
             if (user == null)
             {
                 return BadRequest(new ArgumentException(nameof(emailAddress)));
             }
 
-            var auths = _client.GetDatabase(database).GetCollection<Auth>("Auth", mongoSettings);
+            var auths = repository.GetCollection<Auth>();
             var userCredentials = auths.Find(a => a.UserId == user.Id).SingleOrDefault();
             
             var hashedPassword = plainTextPassword;
