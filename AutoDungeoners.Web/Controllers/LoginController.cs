@@ -44,7 +44,7 @@ namespace AutoDungeoners.Web.Controllers
             var hashedPassword = plainTextPassword;
             if (userCredentials == null || userCredentials.HashedPassword != hashedPassword)
             {
-                return BadRequest(new InvalidOperationException(nameof(plainTextPassword)));
+                return BadRequest(new ArgumentException(nameof(plainTextPassword)));
             }
 
             return Ok(user);
