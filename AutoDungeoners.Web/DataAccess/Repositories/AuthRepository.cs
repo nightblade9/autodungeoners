@@ -13,14 +13,21 @@ namespace AutoDungeoners.Web.DataAccess.Repositories
 
         public Auth FindOneById(ObjectId id)
         {
-            var auths = this.client.GetDatabase(this.databaseName).GetCollection<Auth>(this.repositoryName, this.settings);
+            var auths = this.GetCollection<Auth>();
             var toReturn = auths.Find(a => a.UserId == id).SingleOrDefault();
             return toReturn;
+        }
+
+        public void Insert(Auth auth)
+        {
+            var auths = this.GetCollection<Auth>();
+            auths.InsertOne(auth);
         }
     }
 
     public interface IAuthRepository
     {
         Auth FindOneById(ObjectId id);
+        void Insert(Auth auth);
     }
 }

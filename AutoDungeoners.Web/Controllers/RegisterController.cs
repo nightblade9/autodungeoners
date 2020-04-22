@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using AutoDungeoners.Web.DataAccess.Repositories;
 using AutoDungeoners.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,15 +16,15 @@ namespace AutoDungeoners.Web.Controllers
     [Route("api/[controller]")]
     public class RegisterController : ControllerBase
     {
-        private readonly ILogger<RegisterController> _logger;
-        private readonly IConfiguration _configuration;
-        private IMongoClient _client;
+        private readonly ILogger<RegisterController> logger;
+        private readonly IUserRepository userRepository;
+        private readonly IAuthRepository authRepository;
 
-        public RegisterController(ILogger<RegisterController> logger, IConfiguration configuration, IMongoClient client)
+        public RegisterController(ILogger<RegisterController> logger, IUserRepository userRepository, IAuthRepository authRepository)
         {
-            _logger = logger;
-            _configuration = configuration;
-            _client = client;
+            this.logger = logger;
+            this.userRepository = userRepository;
+            this.authRepository = authRepository;
         }
         
         /// <summary>
@@ -39,22 +40,17 @@ namespace AutoDungeoners.Web.Controllers
             var plainTextPassword = request.Password;
 
             var newUser = new User() { EmailAddress = emailAddress };
-            var database = _configuration.GetSection("MongoDb:Database").Value;
-            var mongoSettings = new MongoCollectionSettings() { AssignIdOnInsert = true };
-            var users = _client.GetDatabase(database).GetCollection<User>("User", mongoSettings);
-
-            var existingUser = users.Find(u => u.EmailAddress == emailAddress).SingleOrDefault();
+            var existingUser = this.userRepository.FindOneByEmail(emailAddress);
             if (existingUser != null)
             {
                 return BadRequest(new ArgumentException(nameof(emailAddress)));
             }
 
-            users.InsertOne(newUser);
-            newUser = users.Find(u => u.EmailAddress == emailAddress).Single();
+            this.userRepository.Insert(newUser);
+            newUser = this.userRepository.FindOneByEmail(emailAddress); // Load back with ID
 
             var auth = new Auth() { UserId = newUser.Id, HashedPassword = plainTextPassword, Salt = "TODO" };
-            var auths = _client.GetDatabase(database).GetCollection<Auth>("Auth", mongoSettings);
-            auths.InsertOne(auth);
+            this.authRepository.Insert(auth);
 
             return Ok(newUser);
         }
