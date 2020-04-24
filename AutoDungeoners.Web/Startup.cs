@@ -64,6 +64,7 @@ namespace AutoDungeoners.Web
             });
 
             // DI
+            services.AddSingleton<GenericRepository>(new GenericRepository(Configuration, client));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
         }

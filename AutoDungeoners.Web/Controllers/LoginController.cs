@@ -19,12 +19,14 @@ namespace AutoDungeoners.Web.Controllers
         private readonly ILogger<LoginController> logger;
         private readonly IUserRepository userRepository;
         private readonly IAuthRepository authRepository;
+        private readonly GenericRepository genericRepository;
 
-        public LoginController(ILogger<LoginController> logger, IUserRepository userRepository, IAuthRepository authRepository)
+        public LoginController(ILogger<LoginController> logger, IUserRepository userRepository, IAuthRepository authRepository, GenericRepository genericRepository)
         {
             this.logger = logger;
             this.userRepository = userRepository;
             this.authRepository = authRepository;
+            this.genericRepository = genericRepository;
         }
 
         /// <summary>Log in.</summary>
@@ -35,6 +37,8 @@ namespace AutoDungeoners.Web.Controllers
             var plainTextPassword = request.Password;
 
             var user = this.userRepository.FindOneByEmail(emailAddress);
+            user = this.genericRepository.SingleOrDefault<User>(u => u.EmailAddress == emailAddress);
+            
             if (user == null)
             {
                 return BadRequest(new ArgumentException(nameof(emailAddress)));
