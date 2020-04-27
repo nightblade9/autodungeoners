@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using AutoDungeoners.Web.Controllers;
 using AutoDungeoners.Web.DataAccess.Repositories;
 using AutoDungeoners.Web.Models;
@@ -23,14 +24,12 @@ namespace AutoDungeoners.Web.Tests
             var request = new LoginRequest() { EmailAddress = expectedEmail, Password = expectedPassword };
 
             var existingUser = new User() { EmailAddress = expectedEmail, Id = new MongoDB.Bson.ObjectId() };
-            var userRepo = new Mock<IUserRepository>();
-            userRepo.Setup(u => u.FindOneByEmail(expectedEmail)).Returns(existingUser);
-
-            var authRepo = new Mock<IAuthRepository>();
             var credentials = new Auth() { UserId = existingUser.Id, HashedPassword = expectedPassword };
-            authRepo.Setup(a => a.FindOneById(existingUser.Id)).Returns(credentials);
+            var repository = new Mock<IGenericRepository>();
+            repository.Setup(u => u.SingleOrDefault(It.IsAny<Expression<Func<User, bool>>>())).Returns(existingUser);
+            repository.Setup(a => a.SingleOrDefault(It.IsAny<Expression<Func<Auth, bool>>>())).Returns(credentials);
             
-            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, userRepo.Object, authRepo.Object);
+            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, repository.Object);
 
             // Act
             var response = controller.Login(request).Result;
@@ -47,7 +46,7 @@ namespace AutoDungeoners.Web.Tests
 
             var request = new LoginRequest() { EmailAddress = expectedEmail };
 
-            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, new Mock<IUserRepository>().Object, new Mock<IAuthRepository>().Object);
+            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, new Mock<IGenericRepository>().Object);
 
             // Act
             var response = controller.Login(request).Result;
@@ -68,14 +67,13 @@ namespace AutoDungeoners.Web.Tests
             var request = new LoginRequest() { EmailAddress = expectedEmail, Password = "wrong password!" };
 
             var existingUser = new User() { EmailAddress = expectedEmail, Id = new MongoDB.Bson.ObjectId() };
-            var userRepo = new Mock<IUserRepository>();
-            userRepo.Setup(u => u.FindOneByEmail(expectedEmail)).Returns(existingUser);
-
-            var authRepo = new Mock<IAuthRepository>();
             var credentials = new Auth() { UserId = existingUser.Id, HashedPassword = expectedPassword };
-            authRepo.Setup(a => a.FindOneById(existingUser.Id)).Returns(credentials);
+
+            var repository = new Mock<IGenericRepository>();
+            repository.Setup(u => u.SingleOrDefault<User>(It.IsAny<Expression<Func<User, bool>>>())).Returns(existingUser);
+            repository.Setup(u => u.SingleOrDefault<Auth>(It.IsAny<Expression<Func<Auth, bool>>>())).Returns(credentials);
             
-            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, userRepo.Object, authRepo.Object);
+            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, repository.Object);
 
             // Act
             var response = controller.Login(request).Result;

@@ -5,7 +5,7 @@ using MongoDB.Driver;
 
 namespace AutoDungeoners.Web.DataAccess.Repositories
 {
-    public class GenericRepository
+    public class GenericRepository : IGenericRepository
     {
         private readonly IMongoClient client;
         private readonly MongoCollectionSettings settings;
@@ -23,13 +23,15 @@ namespace AutoDungeoners.Web.DataAccess.Repositories
             var nameParts = typeof(T).Name.Split('.');
             var repositoryName = nameParts[nameParts.Length - 1];
             var collection = this.client.GetDatabase(this.databaseName).GetCollection<T>(repositoryName, this.settings);
-            //var expression = FuncToExpression(predicate);
-            return collection.Find(o => predicate(o) == true).SingleOrDefault();
+            return collection.Find(predicate).SingleOrDefault();
         }
 
-        private static Expression<Func<T, bool>> FuncToExpression<T>(Func<T, bool> f)  
-        {  
-            return x => f(x);  
-        } 
+        public void Insert<T>(T obj)
+        {
+            var nameParts = typeof(T).Name.Split('.');
+            var repositoryName = nameParts[nameParts.Length - 1];
+            var collection = this.client.GetDatabase(this.databaseName).GetCollection<T>(repositoryName, this.settings);
+            collection.InsertOne(obj);
+        }
     }
 }

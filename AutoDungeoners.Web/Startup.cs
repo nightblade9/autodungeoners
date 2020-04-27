@@ -64,9 +64,7 @@ namespace AutoDungeoners.Web
             });
 
             // DI
-            services.AddSingleton<GenericRepository>(new GenericRepository(Configuration, client));
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IGenericRepository, GenericRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

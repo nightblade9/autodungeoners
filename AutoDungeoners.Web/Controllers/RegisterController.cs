@@ -17,14 +17,12 @@ namespace AutoDungeoners.Web.Controllers
     public class RegisterController : ControllerBase
     {
         private readonly ILogger<RegisterController> logger;
-        private readonly IUserRepository userRepository;
-        private readonly IAuthRepository authRepository;
+        private readonly IGenericRepository genericRepository;
 
-        public RegisterController(ILogger<RegisterController> logger, IUserRepository userRepository, IAuthRepository authRepository)
+        public RegisterController(ILogger<RegisterController> logger, IGenericRepository genericRepository)
         {
             this.logger = logger;
-            this.userRepository = userRepository;
-            this.authRepository = authRepository;
+            this.genericRepository = genericRepository;
         }
         
         /// <summary>
@@ -40,17 +38,17 @@ namespace AutoDungeoners.Web.Controllers
             var plainTextPassword = request.Password;
 
             var newUser = new User() { EmailAddress = emailAddress };
-            var existingUser = this.userRepository.FindOneByEmail(emailAddress);
+            var existingUser = this.genericRepository.SingleOrDefault<User>(u => u.EmailAddress == emailAddress);
             if (existingUser != null)
             {
                 return BadRequest(new ArgumentException(nameof(emailAddress)));
             }
 
-            this.userRepository.Insert(newUser);
-            newUser = this.userRepository.FindOneByEmail(emailAddress); // Load back with ID
+            this.genericRepository.Insert<User>(newUser);
+            newUser = this.genericRepository.SingleOrDefault<User>(u => u.EmailAddress == emailAddress); // Load back with ID
 
             var auth = new Auth() { UserId = newUser.Id, HashedPassword = plainTextPassword, Salt = "TODO" };
-            this.authRepository.Insert(auth);
+            this.genericRepository.Insert<Auth>(auth);
 
             return Ok(newUser);
         }
