@@ -48,7 +48,7 @@ export class Login extends Component {
       }
     })
     .then(data => {
-      console.log("Login succeeded");
+      console.log("Login succeeded: " + JSON.stringify(data));
     })
     .catch(e => console.error("Login failed: " + e));
   }

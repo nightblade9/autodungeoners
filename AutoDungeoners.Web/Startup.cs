@@ -1,4 +1,6 @@
+using System.Text;
 using AutoDungeoners.Web.DataAccess.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Mongo.Migration.Startup;
 using Mongo.Migration.Startup.DotNetCore;
 using MongoDB.Driver;
@@ -26,6 +29,22 @@ namespace AutoDungeoners.Web
         {
 
             services.AddControllersWithViews();
+
+            // JWT configuration
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)  
+            .AddJwtBearer(options =>  
+            {  
+                options.TokenValidationParameters = new TokenValidationParameters  
+                {  
+                    ValidateIssuer = true,  
+                    ValidateAudience = true,  
+                    ValidateLifetime = true,  
+                    ValidateIssuerSigningKey = true,  
+                    ValidIssuer = Configuration["Jwt:Issuer"],  
+                    ValidAudience = Configuration["Jwt:Issuer"],  
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))  
+                };  
+            });  
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -61,6 +80,7 @@ namespace AutoDungeoners.Web
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();

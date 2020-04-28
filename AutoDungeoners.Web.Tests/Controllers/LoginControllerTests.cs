@@ -4,6 +4,7 @@ using AutoDungeoners.Web.Controllers;
 using AutoDungeoners.Web.DataAccess.Repositories;
 using AutoDungeoners.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -29,7 +30,7 @@ namespace AutoDungeoners.Web.Tests
             repository.Setup(u => u.SingleOrDefault(It.IsAny<Expression<Func<User, bool>>>())).Returns(existingUser);
             repository.Setup(a => a.SingleOrDefault(It.IsAny<Expression<Func<Auth, bool>>>())).Returns(credentials);
             
-            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, repository.Object);
+            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, new Mock<IConfiguration>().Object, repository.Object);
 
             // Act
             var response = controller.Login(request).Result;
@@ -46,19 +47,19 @@ namespace AutoDungeoners.Web.Tests
 
             var request = new LoginRequest() { EmailAddress = expectedEmail };
 
-            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, new Mock<IGenericRepository>().Object);
+            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, new Mock<IConfiguration>().Object, new Mock<IGenericRepository>().Object);
 
             // Act
             var response = controller.Login(request).Result;
 
             // Assert
-            Assert.That(response, Is.TypeOf(typeof(BadRequestObjectResult)));
-            var obj = ((BadRequestObjectResult)response).Value;
+            Assert.That(response, Is.TypeOf(typeof(UnauthorizedObjectResult)));
+            var obj = ((UnauthorizedObjectResult)response).Value;
             Assert.That(obj, Is.TypeOf(typeof(ArgumentException)));
         }
 
         [Test]
-        public void LoginReturnsBadRequestIfPasswordDoesntMatchHash()
+        public void LoginReturnsUnauthorizedIfPasswordDoesntMatchHash()
         {
             // Arrange
             const string expectedEmail = "test@test.com";
@@ -73,14 +74,14 @@ namespace AutoDungeoners.Web.Tests
             repository.Setup(u => u.SingleOrDefault<User>(It.IsAny<Expression<Func<User, bool>>>())).Returns(existingUser);
             repository.Setup(u => u.SingleOrDefault<Auth>(It.IsAny<Expression<Func<Auth, bool>>>())).Returns(credentials);
             
-            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, repository.Object);
+            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, new Mock<IConfiguration>().Object, repository.Object);
 
             // Act
             var response = controller.Login(request).Result;
 
             // Assert
-            Assert.That(response, Is.TypeOf(typeof(BadRequestObjectResult)));
-            var obj = ((BadRequestObjectResult)response).Value;
+            Assert.That(response, Is.TypeOf(typeof(UnauthorizedObjectResult)));
+            var obj = ((UnauthorizedObjectResult)response).Value;
             Assert.That(obj, Is.TypeOf(typeof(ArgumentException)));
         }
     }
