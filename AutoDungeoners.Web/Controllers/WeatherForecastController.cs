@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 
 namespace AutoDungeoners.Web.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("/api/[controller]")]
     public class WeatherForecastController : ControllerBase
