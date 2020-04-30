@@ -30,7 +30,10 @@ namespace AutoDungeoners.Web.Tests
             repository.Setup(u => u.SingleOrDefault(It.IsAny<Expression<Func<User, bool>>>())).Returns(existingUser);
             repository.Setup(a => a.SingleOrDefault(It.IsAny<Expression<Func<Auth, bool>>>())).Returns(credentials);
             
-            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, new Mock<IConfiguration>().Object, repository.Object);
+            var configuration = new Mock<IConfiguration>();
+            configuration.Setup(c => c["Jwt:Key"]).Returns(Guid.NewGuid().ToString());
+
+            var controller = new LoginController(new Mock<ILogger<LoginController>>().Object, configuration.Object, repository.Object);
 
             // Act
             var response = controller.Login(request).Result;

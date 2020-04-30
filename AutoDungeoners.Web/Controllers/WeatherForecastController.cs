@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoDungeoners.Web.DataAccess.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace AutoDungeoners.Web.Controllers
 {
     [ApiController]
     [Route("/api/[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController : AutoDungeonersController
     {
         private static readonly string[] Summaries = new[]
         {
@@ -20,7 +20,8 @@ namespace AutoDungeoners.Web.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IGenericRepository _genericRepo;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IGenericRepository genericRepository)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, IGenericRepository genericRepository)
+        : base(configuration, genericRepository)
         {
             _logger = logger;
             _genericRepo = genericRepository;
