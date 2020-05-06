@@ -13,7 +13,7 @@ export class CoreGame extends Component {
     console.log("T=" + token);
     if (token !=  null)
     {
-      var decoded = jwtDecode.call("jwt_decode", token);
+      var decoded = jwtDecode(token);
       this.state.userName = decoded.email;
     }
   }

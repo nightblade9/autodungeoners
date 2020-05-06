@@ -14,7 +14,7 @@ export class Identity extends Component {
 
   render() {
     return (
-        <NavLink tag={Link} className="text-dark" to="/">{ this.state.token != null ? "Hi, " + jwtDecode.call("jwt_decode", this.state.token).email : "Unauthenticated" }</NavLink>
+        <NavLink tag={Link} className="text-dark" to="/">{ this.state.token != null ? "Hi, " + jwtDecode(this.state.token).email : "Unauthenticated" }</NavLink>
     );
   }
 }
