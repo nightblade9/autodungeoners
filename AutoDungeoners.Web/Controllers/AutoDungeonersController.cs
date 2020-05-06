@@ -10,12 +10,10 @@ namespace AutoDungeoners.Web.Controllers
 {
     public class AutoDungeonersController : ControllerBase
     {
-        private readonly IConfiguration configuration;
         private readonly IGenericRepository genericRepository;
 
-        public AutoDungeonersController(IConfiguration configuration, IGenericRepository genericRepository)
+        public AutoDungeonersController(IGenericRepository genericRepository)
         {
-            this.configuration = configuration;
             this.genericRepository = genericRepository;
         }
         

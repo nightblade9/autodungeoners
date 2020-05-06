@@ -21,7 +21,7 @@ namespace AutoDungeoners.Web.Controllers
         private readonly IGenericRepository _genericRepo;
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, IGenericRepository genericRepository)
-        : base(configuration, genericRepository)
+        : base(genericRepository)
         {
             _logger = logger;
             _genericRepo = genericRepository;
