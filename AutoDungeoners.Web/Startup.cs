@@ -65,7 +65,7 @@ namespace AutoDungeoners.Web
 
             // DI
             services.AddScoped<IGenericRepository, GenericRepository>();
-            services.AddScoped<IAbstractService, IncrementEverythingService>();
+            services.AddSingleton<IGenericRepository, GenericRepository>(); // for IncrementEverythingService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

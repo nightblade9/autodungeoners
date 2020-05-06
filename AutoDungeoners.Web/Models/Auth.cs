@@ -4,9 +4,8 @@ using MongoDB.Bson;
 namespace AutoDungeoners.Web.Models
 {
     /// <summary>Authentication instance (user ID, password hash, salt, etc.)</summary>
-    public class Auth
+    public class Auth : HasId
     {
-        public ObjectId Id { get; set; }
         public DocumentVersion Version { get; set; }
         
         public ObjectId UserId { get; set; }

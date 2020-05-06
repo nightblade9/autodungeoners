@@ -6,9 +6,8 @@ namespace AutoDungeoners.Web.Models
     /// <summary>
     /// A registered user (sans credentials, which are in the Auth class).
     /// </summary>
-    public class User
+    public class User : HasId
     {
-        public ObjectId Id { get; set; }
         public DocumentVersion Version { get; set; }
         public string EmailAddress { get; set; }
         public int Gold { get; set; }
