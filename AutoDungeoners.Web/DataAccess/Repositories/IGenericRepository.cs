@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace AutoDungeoners.Web.DataAccess.Repositories
@@ -7,5 +8,6 @@ namespace AutoDungeoners.Web.DataAccess.Repositories
     {
         T SingleOrDefault<T>(Expression<Func<T, bool>> predicate);
         void Insert<T>(T obj);
+        IEnumerable<T> All<T>();
     }
 }

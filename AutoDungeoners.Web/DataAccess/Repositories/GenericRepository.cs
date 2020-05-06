@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
@@ -20,18 +21,30 @@ namespace AutoDungeoners.Web.DataAccess.Repositories
 
         public T SingleOrDefault<T>(Expression<Func<T, bool>> predicate)
         {
-            var nameParts = typeof(T).Name.Split('.');
-            var repositoryName = nameParts[nameParts.Length - 1];
+            var repositoryName = this.GetRepositoryName<T>();
             var collection = this.client.GetDatabase(this.databaseName).GetCollection<T>(repositoryName, this.settings);
             return collection.Find(predicate).SingleOrDefault();
         }
 
         public void Insert<T>(T obj)
         {
-            var nameParts = typeof(T).Name.Split('.');
-            var repositoryName = nameParts[nameParts.Length - 1];
+            var repositoryName = this.GetRepositoryName<T>();
             var collection = this.client.GetDatabase(this.databaseName).GetCollection<T>(repositoryName, this.settings);
             collection.InsertOne(obj);
+        }
+
+        public IEnumerable<T> All<T>()
+        {
+            var repositoryName = this.GetRepositoryName<T>();
+            var collection = this.client.GetDatabase(this.databaseName).GetCollection<T>(repositoryName, this.settings);
+            return collection.AsQueryable();
+        }
+
+        private string GetRepositoryName<T>()
+        {
+            var nameParts = typeof(T).Name.Split('.');
+            var repositoryName = nameParts[nameParts.Length - 1];
+            return repositoryName;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Text;
 using AutoDungeoners.Web.DataAccess.Repositories;
+using AutoDungeoners.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -64,6 +65,7 @@ namespace AutoDungeoners.Web
 
             // DI
             services.AddScoped<IGenericRepository, GenericRepository>();
+            services.AddScoped<IAbstractService, IncrementEverythingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

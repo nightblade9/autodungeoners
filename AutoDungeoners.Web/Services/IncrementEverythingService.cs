@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using AutoDungeoners.Web.DataAccess.Repositories;
+using AutoDungeoners.Web.Models;
 
 namespace AutoDungeoners.Web.Services
 {
@@ -13,9 +14,21 @@ namespace AutoDungeoners.Web.Services
             this.genericRepository = genericRepository;
         }
 
-        public override Task OnTick(TimeSpan elapsedTime)
+        public override async Task OnTick(TimeSpan elapsedTime)
         {
-            throw new NotImplementedException();
+            // Because order matters, update every user, aspect by aspect
+            await Task.Run(() => {
+                this.UpdateGold(elapsedTime);
+            });
+        }
+
+        private void UpdateGold(TimeSpan elapsedTime)
+        {
+            var users = genericRepository.All<User>();
+            foreach (var user  in users)
+            {
+                user.Gold += (int)Math.Floor(elapsedTime.TotalSeconds);
+            }
         }
     }
 }
