@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import  { Redirect } from 'react-router-dom';
+import { RequireAuthentication } from './Authentication/RequireAuthentication';
 var jwtDecode = require('jwt-decode');
 
 export class CoreGame extends Component {
@@ -10,7 +10,6 @@ export class CoreGame extends Component {
     this.state = {};
 
     var token = localStorage.getItem("userInfo");
-    console.log("T=" + token);
     if (token !=  null)
     {
       var decoded = jwtDecode(token);
@@ -18,14 +17,10 @@ export class CoreGame extends Component {
     }
   }
 
-  render() {
-    if (localStorage.getItem("userInfo") == null)
-    {
-      return  <Redirect  to="/login" />
-    }
-
+  render() {   
     return (
       <div>
+        <RequireAuthentication />
         <h1>{this.state.userName}</h1>
       </div>
     );
