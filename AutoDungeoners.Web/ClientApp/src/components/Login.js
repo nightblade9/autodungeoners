@@ -51,6 +51,7 @@ export class Login extends Component {
       console.log("Login succeeded: " + JSON.stringify(data));
       var token = data.token;
       localStorage.setItem("userInfo", token);
+      this.props.history.push("/");
     })
     .catch(e => console.error("Login failed: " + e));
   }

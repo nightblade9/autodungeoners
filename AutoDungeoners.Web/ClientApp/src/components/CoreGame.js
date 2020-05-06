@@ -21,7 +21,7 @@ export class CoreGame extends Component {
     return (
       <div>
         <RequireAuthentication />
-        <h1>{this.state.userName}</h1>
+        <h1>{this.state.userName} the Dungeoner</h1>
       </div>
     );
   }
