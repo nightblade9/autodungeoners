@@ -6,6 +6,7 @@ import { Counter } from './components/Counter';
 import { FetchData } from './components/FetchData';
 import { Register } from './components/Register';
 import { Login } from './components/Login';
+import { CoreGame } from './components/CoreGame';
 
 import './custom.css'
 
@@ -20,6 +21,7 @@ export default class App extends Component {
         <Route path='/login' component={Login} />
         <Route path='/counter' component={Counter} />
         <Route path='/fetch-data' component={FetchData} />
+        <Route path='/core-game' component={CoreGame} />
       </Layout>
     );
   }

@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
+import  { Redirect } from 'react-router-dom';
 
 export class Home extends Component {
-  static displayName = Home.name;
 
   render () {
+    if (localStorage.getItem("userInfo") != null)
+    {
+      return  <Redirect  to="/core-game" />
+    }
+
     return (
       <div>
         <h1>Hello, world!</h1>
