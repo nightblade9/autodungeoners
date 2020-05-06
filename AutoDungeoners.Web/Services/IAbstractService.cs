@@ -5,6 +5,6 @@ namespace AutoDungeoners.Web.Services
 {
     interface IAbstractService
     {
-        Task OnTick(TimeSpan elapsedTime);
+        Task OnTick(int elapsedSeconds);
     }
 }

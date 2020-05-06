@@ -17,23 +17,23 @@ namespace AutoDungeoners.Web.Services
             this.genericRepository = genericRepository;
         }
 
-        public override async Task OnTick(TimeSpan elapsedTime)
+        public override async Task OnTick(int elapsedSeconds)
         {
             // Because order matters, update every user, aspect by aspect
             await Task.Run(() => {
                 this.users = genericRepository.All<User>();
 
-                this.UpdateGold(elapsedTime);
+                this.UpdateGold(elapsedSeconds);
 
                 this.SaveAllUsers();
             });
         }
 
-        private void UpdateGold(TimeSpan elapsedTime)
+        private void UpdateGold(int elapsedSeconds)
         {
             foreach (var user  in users)
             {
-                user.Gold += (int)Math.Floor(elapsedTime.TotalSeconds);
+                user.Gold += elapsedSeconds;
             }
         }
 

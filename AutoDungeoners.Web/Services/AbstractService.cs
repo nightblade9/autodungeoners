@@ -12,24 +12,29 @@ namespace AutoDungeoners.Web.Services
     // Mostly copied from https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-3.1&tabs=netcore-cli#timed-background-tasks
     abstract class AbstractService : IAbstractService, IHostedService
     {
-        public abstract Task OnTick(TimeSpan elapsedTime);
+        public abstract Task OnTick(int elapsedSeconds);
         
-        private DateTime lastRunTime = DateTime.Now;
         private bool isRunning;
+        private DateTime lastTick;
+        private TimeSpan unusedElapsed = TimeSpan.Zero;
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             this.isRunning = !cancellationToken.IsCancellationRequested;
+            this.lastTick = DateTime.Now;
 
             while (this.isRunning && !cancellationToken.IsCancellationRequested)
             {
                 var now = DateTime.Now;
-                var elapsed = now - this.lastRunTime;
-                if (elapsed.TotalSeconds >= 1)
+                var elapsed = now - this.lastTick;
+                unusedElapsed += elapsed;
+                if (unusedElapsed.TotalSeconds >= 1)
                 {
-                    this.lastRunTime = now;
-                    this.OnTick(elapsed);
+                    int wholeSeconds = (int)Math.Floor(unusedElapsed.TotalSeconds);
+                    unusedElapsed = unusedElapsed.Subtract(TimeSpan.FromSeconds(wholeSeconds));
+                    this.OnTick(wholeSeconds);
                 }
+                lastTick = now;
             }
             
             return Task.CompletedTask;
