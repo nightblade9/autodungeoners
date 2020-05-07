@@ -7,7 +7,7 @@ it('Identity renders without crashing and shows Unauthenticated', async () => {
   const div = document.createElement('div');
   ReactDOM.render(
     <MemoryRouter>
-      <Identity />
+      <Identity token={null} />
     </MemoryRouter>, div);
   await new Promise(resolve => setTimeout(resolve, 1000));
   expect(div.textContent.includes("Unauthenticated"));

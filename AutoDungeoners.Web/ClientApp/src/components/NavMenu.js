@@ -32,7 +32,7 @@ export class NavMenu extends Component {
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
                 <NavItem>
-                  <Identity />
+                  <Identity token={localStorage.getItem("userInfo")} />
                 </NavItem>
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
