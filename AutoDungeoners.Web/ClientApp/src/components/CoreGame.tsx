@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { RequireAuthentication } from './Authentication/RequireAuthentication';
+
 import { IUser } from '../interfaces/IUser';
+import Timer from "../functions/Timer";
+
 import jwtDecode from 'jwt-decode';
 
 
@@ -19,14 +22,16 @@ class CoreGame extends Component<IProps, IState> {
 
   constructor(props:IProps) {
     super(props);
-    this.state = { user: undefined, userName: "", isLoading: true };
 
+    var userName = "";
     var token = localStorage.getItem("userInfo");
     if (token !=  null)
     {
       var decoded = jwtDecode(token);
-      this.setState({ userName: decoded.email });
+      userName = decoded.email;;
     }
+
+    this.state = { user: undefined, userName: userName, isLoading: true };
   }
 
   componentDidMount() {
@@ -50,9 +55,11 @@ class CoreGame extends Component<IProps, IState> {
   static renderUserStats(user)
   {
     return (
-      <ul>
-        <li><strong>Gold: </strong> {user.gold}</li>
-      </ul>
+      <div>
+        <ul>
+          <li><strong>Gold: </strong> {user.gold}</li>
+        </ul>
+      </div>
     );
   }
 
@@ -70,4 +77,4 @@ class CoreGame extends Component<IProps, IState> {
   }
 }
 
-export { CoreGame }
+export { CoreGame };
