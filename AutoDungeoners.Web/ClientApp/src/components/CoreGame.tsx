@@ -1,19 +1,31 @@
 import React, { Component } from 'react';
 import { RequireAuthentication } from './Authentication/RequireAuthentication';
-var jwtDecode = require('jwt-decode');
+import { IUser } from '../interfaces/IUser';
+import jwtDecode from 'jwt-decode';
 
-export class CoreGame extends Component {
+
+interface IProps {
+  token: string,
+}
+
+interface IState {
+  user?: IUser,
+  isLoading: boolean,
+  userName: string,
+}
+
+class CoreGame extends Component<IProps, IState> {
   static displayName = CoreGame.name;
 
-  constructor(props) {
+  constructor(props:IProps) {
     super(props);
-    this.state = { user: null, isLoading: true };
+    this.state = { user: undefined, userName: "", isLoading: true };
 
     var token = localStorage.getItem("userInfo");
     if (token !=  null)
     {
       var decoded = jwtDecode(token);
-      this.state.userName = decoded.email;
+      this.setState({ userName: decoded.email });
     }
   }
 
@@ -45,12 +57,17 @@ export class CoreGame extends Component {
   }
 
   async fetchUser() {
+    const headers:Record<string, string> = {
+      "Bearer": localStorage.getItem("userInfo")
+    };
+
     const response = await fetch('api/User', {
-      headers: {
-        "Bearer": localStorage.getItem("userInfo")
-      }
+      headers: headers
     });
+
     const data = await response.json();
     this.setState({ user: data.currentUser, isLoading: false });
   }
 }
+
+export { CoreGame }
