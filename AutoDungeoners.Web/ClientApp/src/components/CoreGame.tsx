@@ -41,7 +41,7 @@ class CoreGame extends Component<IProps, IState> {
   render() {   
     let contents = this.state.isLoading
       ? <p><em>Loading...</em></p>
-      : CoreGame.renderUserStats(this.state.user);
+      : this.renderUserStats(this.state.user);
 
     return (
       <div>
@@ -52,10 +52,10 @@ class CoreGame extends Component<IProps, IState> {
     );
   }
 
-  static renderUserStats(user)
-  {
+  renderUserStats(user) {
     return (
       <div>
+        <Timer intervalSeconds={60} callback={() => this.fetchUser()} />
         <ul>
           <li><strong>Gold: </strong> {user.gold}</li>
         </ul>
