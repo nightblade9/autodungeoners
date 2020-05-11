@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { RequireAuthentication } from './Authentication/RequireAuthentication';
-
+import { GameUiUpdater } from '../components/GameUiUpdater'
 import { IUser } from '../interfaces/IUser';
 import Timer from "../functions/Timer";
 
@@ -48,6 +48,7 @@ class CoreGame extends Component<IProps, IState> {
         <RequireAuthentication />
         <h1>{this.state.userName} the Dungeoner</h1>
         {contents}
+        
       </div>
     );
   }
@@ -56,6 +57,7 @@ class CoreGame extends Component<IProps, IState> {
     return (
       <div>
         <Timer intervalSeconds={60} callback={() => this.fetchUser()} />
+        <GameUiUpdater user={user} onUpdate={() => this.forceUpdate()} />
         <ul>
           <li><strong>Gold: </strong> {user.gold}</li>
         </ul>
