@@ -10,7 +10,7 @@ using Moq;
 using NUnit.Framework;
 using static AutoDungeoners.Web.Controllers.RegisterController;
 
-namespace AutoDungeoners.Web.Tests
+namespace AutoDungeoners.Web.Tests.Controllers
 {
     [TestFixture]
     public class RegisterControllerTests
@@ -23,6 +23,7 @@ namespace AutoDungeoners.Web.Tests
             const string expectedEmail = "test@test.com";
             const string expectedPassword = "password";
 
+            User expectedUser = null;
             var request = new RegistrationRequest() { EmailAddress = expectedEmail, Password = expectedPassword };
 
             var repository = new Mock<IGenericRepository>();
@@ -32,6 +33,7 @@ namespace AutoDungeoners.Web.Tests
                 Assert.That(user.EmailAddress, Is.EqualTo(expectedEmail));
                 repository.Setup(u => u.SingleOrDefault(It.IsAny<Expression<Func<User, bool>>>())).Returns(user);
                 user.Id = ObjectId.GenerateNewId();
+                expectedUser = user;
             });
 
             repository.Setup(a => a.Insert(It.IsAny<Auth>())).Callback<Auth>((auth) =>
@@ -47,6 +49,8 @@ namespace AutoDungeoners.Web.Tests
 
             // Assert: response is OK and records were inserted (callbacks invoked)
             Assert.That(response, Is.TypeOf(typeof(OkObjectResult)));
+            var obj = ((OkObjectResult)response).Value;
+            Assert.That(obj, Is.EqualTo(expectedUser));
             repository.VerifyAll();
         }
 

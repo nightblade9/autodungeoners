@@ -10,7 +10,7 @@ using Moq;
 using NUnit.Framework;
 using static AutoDungeoners.Web.Controllers.LoginController;
 
-namespace AutoDungeoners.Web.Tests
+namespace AutoDungeoners.Web.Tests.Controllers
 {
     [TestFixture]
     public class LoginControllerTests
@@ -40,6 +40,9 @@ namespace AutoDungeoners.Web.Tests
 
             // Assert
             Assert.That(response, Is.TypeOf(typeof(OkObjectResult)));
+            var obj = ((OkObjectResult)response).Value;
+            Assert.That(obj.GetType().GetProperty("token").GetValue(obj), Is.Not.Null);
+
         }
 
         [Test]

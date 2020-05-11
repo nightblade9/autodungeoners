@@ -79,7 +79,7 @@ class CoreGame extends Component<IProps, IState> {
     });
 
     const data = await response.json();
-    this.setState({ user: data.currentUser, isLoading: false });
+    this.setState({ user: data, isLoading: false });
   }
 }
 

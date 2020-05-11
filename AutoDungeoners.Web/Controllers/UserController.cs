@@ -1,6 +1,5 @@
 using System;
 using AutoDungeoners.Web.DataAccess.Repositories;
-using AutoDungeoners.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -27,9 +26,7 @@ namespace AutoDungeoners.Web.Controllers
             var currentUser = this.CurrentUser;
             if (currentUser != null)
             {
-                return Ok(new {
-                    currentUser
-                });
+                return Ok(currentUser);
             }
             else
             {
