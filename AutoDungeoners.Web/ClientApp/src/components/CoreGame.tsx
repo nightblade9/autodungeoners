@@ -56,13 +56,17 @@ class CoreGame extends Component<IProps, IState> {
   renderUserStats(user) {
     return (
       <div>
-        <Timer intervalSeconds={60} callback={() => this.fetchUser()} />
+        <Timer intervalSeconds={60} callback={() => this.refreshState(user)} />
         <GameUiUpdater user={user} onUpdate={() => this.forceUpdate()} />
         <ul>
           <li><strong>Gold: </strong> {user.gold}</li>
         </ul>
       </div>
     );
+  }
+
+  refreshState(user) {
+    this.setState({user: user});
   }
 
   async fetchUser() {

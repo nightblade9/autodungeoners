@@ -18,9 +18,8 @@ class GameUiUpdater extends Component<IProps, IProps> {
 
     async onTick() {
         this.state.user.gold += 1;
-        this.setState({user: this.state.user});
         // Force parent to re-render
-        this.state.onUpdate();
+        this.state.onUpdate(this.state.user);
     }
 
     render() {
