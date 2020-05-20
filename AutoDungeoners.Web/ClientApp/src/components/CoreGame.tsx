@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { RequireAuthentication } from './Authentication/RequireAuthentication';
 import { GameUiUpdater } from '../components/GameUiUpdater'
 import { IUser } from '../interfaces/IUser';
+import JwtBody from '../interfaces/Jwt';
 import Timer from "../functions/Timer";
 
 import jwtDecode from 'jwt-decode';
-
 
 interface IProps {
   token: string,
@@ -23,12 +23,12 @@ class CoreGame extends Component<IProps, IState> {
   constructor(props:IProps) {
     super(props);
 
-    var userName = "";
-    var token = localStorage.getItem("userInfo");
+    let userName = "";
+    let token = localStorage.getItem("userInfo");
     if (token !=  null)
     {
-      var decoded = jwtDecode(token);
-      userName = decoded.email;;
+      let decoded : JwtBody = jwtDecode(token);
+      userName = decoded.email;
     }
 
     this.state = { user: undefined, userName: userName, isLoading: true };
@@ -53,25 +53,25 @@ class CoreGame extends Component<IProps, IState> {
     );
   }
 
-  renderUserStats(user) {
+  renderUserStats(user? : IUser) {
     return (
       <div>
         <Timer intervalSeconds={60} callback={() => this.refreshState(user)} />
-        <GameUiUpdater user={user} onUpdate={() => this.forceUpdate()} />
+        <GameUiUpdater user={user!} onUpdate={() => this.forceUpdate()} />
         <ul>
-          <li><strong>Gold: </strong> {user.gold}</li>
+          <li><strong>Gold: </strong> {user?.gold ?? 0}</li>
         </ul>
       </div>
     );
   }
 
-  refreshState(user) {
+  refreshState(user?: IUser) {
     this.setState({user: user});
   }
 
   async fetchUser() {
     const headers:Record<string, string> = {
-      "Bearer": localStorage.getItem("userInfo")
+      "Bearer" : localStorage.getItem("userInfo")!
     };
 
     const response = await fetch('api/User', {

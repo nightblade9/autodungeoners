@@ -3,7 +3,7 @@ import { IUser } from '../interfaces/IUser';
 import Timer from "../functions/Timer";
 
 interface IProps {
-    user?: IUser,
+    user: IUser,
     onUpdate: any
 }
 

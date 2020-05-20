@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 
-export const Timer = ({intervalSeconds, callback}) => {
+type args = {
+  intervalSeconds: number,
+  callback: () => void
+};
+
+export const Timer = ({intervalSeconds, callback} : args) => {
   const [seconds] = useState(0);
 
   useEffect(() => {
-    let interval = null;
-    interval = setInterval(() => {
-        callback();
-        }, intervalSeconds * 1000);
+    let interval = setInterval(callback, intervalSeconds * 1000);
     return () => clearInterval(interval);
   }, [seconds, intervalSeconds, callback]);
   
