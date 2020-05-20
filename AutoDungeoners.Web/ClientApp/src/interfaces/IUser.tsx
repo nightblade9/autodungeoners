@@ -1,9 +1,16 @@
 // Matches Models.User in C#
-interface IUser
+
+export interface DocVersion {
+    major: number,
+    minor: number,
+    revision: number
+};
+
+export interface IUser
 {
-    version: Object,
+    id: any, // from mongoDB
+
+    version: DocVersion,
     emailAddress: string,
     gold: number
-}
-
-export type { IUser };
+};
