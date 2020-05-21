@@ -77,12 +77,13 @@
 #
 # Exclude files from exporting
 #
-
 .gitattributes export-ignore
 .gitignore     export-ignore
 
-# FOR C#
+# FOR C# & related files
 *.cs    text diff=csharp eol=crlf
+*.csproj    text eol=crlf
+*.sln   text eol=crlf
 
 #JS and TS
 *.tsx   text eol=lf
