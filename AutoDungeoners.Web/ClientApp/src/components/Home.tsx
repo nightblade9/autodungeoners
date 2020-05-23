@@ -1,22 +1,23 @@
 import React, { Component } from 'react';
-import  { Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import { Container, Typography } from '@material-ui/core';
 
 export class Home extends Component {
 
-  render () {
-    if (localStorage.getItem("userInfo") != null)
-    {
-      return  <Redirect  to="/core-game" />
+  render() {
+    if (localStorage.getItem("userInfo") != null) {
+      return <Redirect to="/core-game" />
     }
 
     return (
       <div>
-        <h1>Hello, world!</h1>
+        <Typography variant="h2">Hello, world!</Typography>
         <p>Welcome to your new single-page application, built with:</p>
         <ul>
           <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
           <li><a href='https://facebook.github.io/react/'>React</a> for client-side code</li>
-          <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
+          <li><s><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</s></li>
+          <li><a href='http://https://material-ui.com'>Material-UI</a> for layout and styling</li>
         </ul>
         <p>To help you get started, we have also set up:</p>
         <ul>

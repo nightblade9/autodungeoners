@@ -1,14 +1,18 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 
+// for material-ui font
+import 'typeface-roboto';
+import { CssBaseline } from '@material-ui/core';
+
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 
 ReactDOM.render(
   <React.StrictMode>
+    <CssBaseline />
     <BrowserRouter basename={baseUrl!}>
       <App />
     </BrowserRouter>

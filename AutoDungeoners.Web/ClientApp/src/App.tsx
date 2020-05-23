@@ -8,8 +8,6 @@ import { Register } from './components/Register';
 import { Login } from './components/Login';
 import { CoreGame } from './components/CoreGame';
 
-import './custom.css'
-
 export default () => {
   return (
     <Layout>
