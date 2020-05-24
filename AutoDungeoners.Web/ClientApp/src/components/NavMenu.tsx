@@ -1,60 +1,69 @@
-import React, { Component } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import './NavMenu.css';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { AppBar, Toolbar, IconButton, Typography, Button } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu'
+import { Link, useHistory } from 'react-router-dom';
 import { Identity } from './Authentication/Identity';
+import { inherits } from 'util';
 
-type State = {
-  collapsed: boolean
-};
-
-export class NavMenu extends Component<any, State> {
-  static displayName = NavMenu.name;
-
-  constructor (props: any) {
-    super(props);
-
-    this.toggleNavbar = this.toggleNavbar.bind(this);
-    this.state = {
-      collapsed: true
-    };
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  navLink: {
+    cursor: "pointer",
+    color: "inherit",
+    textDecoration: "inherit"
   }
+}));
 
-  toggleNavbar () {
-    this.setState({
-      collapsed: !this.state.collapsed
-    });
-  }
+const NavButton = (props: { to: string, children: React.ReactNode | React.ReactNode[] }) => {
+  return (
+    <Button color="inherit" component={Link} to={props.to} >
+      {props.children}
+    </Button>
+  )
+}
 
-  render () {
-    return (
-      <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
-          <Container>
-            <NavbarBrand tag={Link} to="/">AutoDungeoners.Web</NavbarBrand>
-            <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-            <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-              <ul className="navbar-nav flex-grow">
-                <NavItem>
-                  <Identity token={localStorage.getItem("userInfo")!} />
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/login">Login</NavLink>
-                </NavItem>
-              </ul>
-            </Collapse>
-          </Container>
-        </Navbar>
-      </header>
-    );
-  }
+
+export function NavMenu() {
+  const classes = useStyles();
+  const history = useHistory();
+
+  return (
+    <header>
+      <AppBar position="static">
+        <Toolbar>
+          {/* Menu Icon */}
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <MenuIcon />
+          </IconButton>
+
+          {/* Title */}
+          <Typography variant="h6" className={classes.title}>
+            <Link to="/" className={classes.navLink}>
+              Auto Dungeoners
+            </Link>
+          </Typography>
+
+          {/* user info */}
+          <Typography variant="h6">
+            <Identity token={localStorage.getItem("userInfo")!} />
+          </Typography>
+
+          {/* all the links */}
+          <NavButton to="/" >Home</NavButton>
+          <NavButton to="/counter">Counter</NavButton>
+          <NavButton to="/fetch-data">Fetch data</NavButton>
+          <NavButton to="/login">Login</NavButton>
+        </Toolbar>
+      </AppBar>
+    </header>
+  )
 }

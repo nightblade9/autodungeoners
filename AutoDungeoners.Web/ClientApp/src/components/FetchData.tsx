@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@material-ui/core';
 
 type State = {
   forecasts: any[],
@@ -19,26 +20,28 @@ export class FetchData extends Component<any, State> {
 
   static renderForecastsTable(forecasts : any[]) {
     return (
-      <table className='table table-striped' aria-labelledby="tabelLabel">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-          </tr>
-        </thead>
-        <tbody>
+      <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Date</TableCell>
+            <TableCell>Temp. (C)</TableCell>
+            <TableCell>Temp. (F)</TableCell>
+            <TableCell>Summary</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {forecasts.map(forecast =>
-            <tr key={forecast.date}>
-              <td>{forecast.date}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
-            </tr>
+            <TableRow key={forecast.date}>
+              <TableCell>{forecast.date}</TableCell>
+              <TableCell>{forecast.temperatureC}</TableCell>
+              <TableCell>{forecast.temperatureF}</TableCell>
+              <TableCell>{forecast.summary}</TableCell>
+            </TableRow>
           )}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
+      </TableContainer>
     );
   }
 
