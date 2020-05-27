@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoDungeoners.Web.DataAccess.Repositories;
@@ -7,7 +5,7 @@ using AutoDungeoners.Web.Models;
 
 namespace AutoDungeoners.Web.Services
 {
-    class IncrementEverythingService : AbstractService
+    public class IncrementEverythingService : AbstractService
     {
         private readonly IGenericRepository genericRepository;
         private IEnumerable<User> users;

@@ -10,7 +10,7 @@ namespace AutoDungeoners.Web.Services
     /// a method to implement service-specific logic based on the amount of time elapsed.
     /// </summary>
     // Mostly copied from https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-3.1&tabs=netcore-cli#timed-background-tasks
-    abstract class AbstractService : IAbstractService, IHostedService, IDisposable
+    public abstract class AbstractService : IAbstractService, IHostedService, IDisposable
     {
         public abstract Task OnTick(int elapsedSeconds);
         private Timer timer;
